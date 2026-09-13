@@ -1,15 +1,14 @@
 import { test } from '../support/fixtures'
 
 import { generateOrderCode } from '../support/helpers'
-import type { OrderDetails } from '../support/actions/orderLockupActions'
+import type { OrderDetails } from '../support/actions/orderLookupActions'
 
 /// AAA - Arrange, Act, Assert
 
 test.describe('Consulta de Pedido', () => {
   test.beforeEach(async ({ app }) => {
-    await app.landing.goto()
-    await app.navbar.orderLockupLink()
-    await app.orderLockup.validatePageLoaded()
+    await app.orderLookup.open()
+    
   })
 
   test('deve consultar um pedido aprovado', async ({ app }) => {
@@ -26,9 +25,9 @@ test.describe('Consulta de Pedido', () => {
       payment: 'À Vista',
     }
 
-    await app.orderLockup.searchOrder(order.number)
-    await app.orderLockup.validateOrderDetails(order)
-    await app.orderLockup.validateStatusBadge(order.status)
+    await app.orderLookup.searchOrder(order.number)
+    await app.orderLookup.validateOrderDetails(order)
+    await app.orderLookup.validateStatusBadge(order.status)
   })
 
   test('deve consultar um pedido reprovado', async ({ app }) => {
@@ -46,10 +45,10 @@ test.describe('Consulta de Pedido', () => {
     }
 
     // Act
-    await app.orderLockup.searchOrder(order.number)
+    await app.orderLookup.searchOrder(order.number)
     // Assert
-    await app.orderLockup.validateOrderDetails(order)
-    await app.orderLockup.validateStatusBadge(order.status)
+    await app.orderLookup.validateOrderDetails(order)
+    await app.orderLookup.validateStatusBadge(order.status)
   })
 
   test('deve consultar um pedido em analise', async ({ app }) => {
@@ -67,25 +66,25 @@ test.describe('Consulta de Pedido', () => {
     }
 
     // Act
-    await app.orderLockup.searchOrder(order.number)
+    await app.orderLookup.searchOrder(order.number)
     // Assert
-    await app.orderLockup.validateOrderDetails(order)
-    await app.orderLockup.validateStatusBadge(order.status)
+    await app.orderLookup.validateOrderDetails(order)
+    await app.orderLookup.validateStatusBadge(order.status)
   })
 
   test('deve exibir mensagem quando o pedido não é encontrado', async ({ app }) => {
     const order = generateOrderCode()
 
-    await app.orderLockup.searchOrder(order)
+    await app.orderLookup.searchOrder(order)
 
-    await app.orderLockup.validateOrderNotFound()
+    await app.orderLookup.validateOrderNotFound()
   })
 
   test('deve exibir mensagem quando o codigo do pedido está fora do padrão', async ({ app }) => {
     const orderCode = 'XYZ-999-INVALIDO'
 
-    await app.orderLockup.searchOrder(orderCode)
+    await app.orderLookup.searchOrder(orderCode)
 
-    await app.orderLockup.validateOrderNotFound()
+    await app.orderLookup.validateOrderNotFound()
   })
 })

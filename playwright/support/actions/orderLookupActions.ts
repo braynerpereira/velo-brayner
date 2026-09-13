@@ -12,9 +12,14 @@ export type OrderDetails = {
   payment: string
 }
 
-export function createOrderLockupActions(page: Page) {
+export function createOrderLookupActions(page: Page) {
   return {
-    async validatePageLoaded() {
+    async open() {
+      await page.goto('/')
+      const title = page.getByTestId('hero-section').getByRole('heading')
+      await expect(title).toContainText('Velô Sprint')
+
+      await page.getByRole('link', { name: 'Consultar Pedido' }).click()
       await expect(page.getByRole('heading')).toContainText('Consultar Pedido')
     },
 
